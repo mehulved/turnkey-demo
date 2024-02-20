@@ -1,6 +1,7 @@
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_ecs as ecs,
+    aws_route53 as route53,
     aws_ecs_patterns as ecs_patterns,
     Stack,
     # aws_sqs as sqs,
@@ -16,7 +17,9 @@ class TurnkeyStack(Stack):
 
         cluster = ecs.Cluster(self, "devCluster", vpc=vpc)
 
-        ecs_patterns.ApplicationLoadBalancedFargateService(self, "DevApp",
+        domain_zone = route53.HostedZone.from_lookup(self, "pouringcat", domain_name="pouringcat.com")
+        domain_name = "dev.pouringcat.com"
+        service = ecs_patterns.ApplicationLoadBalancedFargateService(self, "DevApp",
                                                            cluster=cluster,  # Required
                                                            cpu=256,  # Default is 256
                                                            runtime_platform=ecs.RuntimePlatform(
@@ -28,4 +31,6 @@ class TurnkeyStack(Stack):
                                                                image=ecs.ContainerImage.from_registry(
                                                                    "amazon/amazon-ecs-sample")),
                                                            memory_limit_mib=512,  # Default is 512
-                                                           public_load_balancer=True)  # Default is True
+                                                           public_load_balancer=True,
+                                                           domain_zone=domain_zone,
+                                                           domain_name=domain_name)  # Default is True
