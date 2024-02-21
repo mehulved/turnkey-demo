@@ -1,5 +1,8 @@
 name: Deploy to Dev
-on: push
+on:
+  push:
+    branches:
+      - main
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
