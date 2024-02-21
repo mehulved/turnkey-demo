@@ -2,6 +2,9 @@ name: Start Turnkey
 on:
   pull_request:
     types: [opened,reopened]
+  push:
+    branches-ignore:
+      - main
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
