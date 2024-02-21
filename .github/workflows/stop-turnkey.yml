@@ -1,0 +1,20 @@
+name: Stop Turnkey
+on:
+  pull_request:
+    types: [closed]
+jobs:
+  aws_cdk:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: cdk destroy
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'destroy'
+          cdk_args: '-c $BRANCH_NAME --require-approval never'
+          actions_comment: false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
