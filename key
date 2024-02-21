@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Exit immediately on error
+set -e
+
+GIT_BRANCH=$(git branch --show-current)
+
+# Create a turnkey stack
+create(){
+  if [[ "$GIT_BRANCH" != "main" ]]
+then
+  cdk synth -c branch="${GIT_BRANCH}"
+  cdk deploy -c branch="${GIT_BRANCH}"
+  return 0
+fi
+}
+
+# Create a turnkey stack
+destroy(){
+  if [[ "$GIT_BRANCH" != "main" ]]
+then
+  cdk destroy -c branch="${GIT_BRANCH}"
+  return 0
+fi
+}
+
+ACTION=$1
+if [[ "$ACTION" == "open" ]]
+then
+  create
+elif [[ "$ACTION" == "close" ]]
+then
+  destroy
+else
+  echo "Invalid option passed. Valid options - open, close"
+  exit 1
+fi
