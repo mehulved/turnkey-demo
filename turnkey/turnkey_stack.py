@@ -29,7 +29,7 @@ class TurnkeyStack(Stack):
             app_name = "DevApp"
             container = "amazon/amazon-ecs-sample"
 
-        cluster = ecs.Cluster(self, cluster_name=cluster_name, vpc=vpc)
+        cluster = ecs.Cluster(self, cluster_name, vpc=vpc)
         domain_zone = route53.HostedZone.from_lookup(self, "pouringcat", domain_name="pouringcat.com")
 
         ecs_patterns.ApplicationLoadBalancedFargateService(self, app_name,
