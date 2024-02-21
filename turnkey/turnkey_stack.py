@@ -29,7 +29,8 @@ class TurnkeyStack(Stack):
                                                            desired_count=2,  # Default is 1
                                                            task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
                                                                image=ecs.ContainerImage.from_registry(
-                                                                   "amazon/amazon-ecs-sample")),
+                                                                   "amazon/amazon-ecs-sample"),
+                                                               environment={"turnkey":"true", "turnkey_name": "demo"}),
                                                            memory_limit_mib=512,  # Default is 512
                                                            public_load_balancer=True,
                                                            domain_zone=domain_zone,
