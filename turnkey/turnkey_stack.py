@@ -15,11 +15,24 @@ class TurnkeyStack(Stack):
 
         vpc = ec2.Vpc(self, "DevVpc", max_azs=2)  # default is all AZs in region
 
-        cluster = ecs.Cluster(self, "devCluster", vpc=vpc)
+        branch = self.node.try_get_context('branch')
+        if branch:
+            cluster_name = f"{branch}Cluster"
+            domain_name = f"{branch}.dev.pouringcat.com"
+            environment = {"turnkey": "true", "turnkey_name": f"{branch}"}
+            app_name = f"{turnkey}App"
+            container = "amazon/amazon-ecs-sample"
+        else:
+            cluster_name = "devCluster"
+            domain_name = "dev.pouringcat.com"
+            environment = {"turnkey": "false"}
+            app_name = "DevApp"
+            container = "amazon/amazon-ecs-sample"
 
+        cluster = ecs.Cluster(self, cluster_name=cluster_name, vpc=vpc)
         domain_zone = route53.HostedZone.from_lookup(self, "pouringcat", domain_name="pouringcat.com")
-        domain_name = "dev.pouringcat.com"
-        service = ecs_patterns.ApplicationLoadBalancedFargateService(self, "DevApp",
+
+        ecs_patterns.ApplicationLoadBalancedFargateService(self, app_name,
                                                            cluster=cluster,  # Required
                                                            cpu=256,  # Default is 256
                                                            runtime_platform=ecs.RuntimePlatform(
@@ -28,8 +41,8 @@ class TurnkeyStack(Stack):
                                                             ),
                                                            desired_count=2,  # Default is 1
                                                            task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-                                                               image=ecs.ContainerImage.from_registry(
-                                                                   "amazon/amazon-ecs-sample")),
+                                                               image=ecs.ContainerImage.from_registry(container),
+                                                               environment=environment),
                                                            memory_limit_mib=512,  # Default is 512
                                                            public_load_balancer=True,
                                                            domain_zone=domain_zone,
