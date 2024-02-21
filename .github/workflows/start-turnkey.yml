@@ -9,9 +9,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: cdk diff
         uses: youyo/aws-cdk-github-actions@v2
         with:

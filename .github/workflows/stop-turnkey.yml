@@ -6,6 +6,8 @@ jobs:
   aws_cdk:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: cdk destroy
         uses: youyo/aws-cdk-github-actions@v2
