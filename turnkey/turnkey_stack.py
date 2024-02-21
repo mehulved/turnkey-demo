@@ -20,7 +20,7 @@ class TurnkeyStack(Stack):
             cluster_name = f"{branch}Cluster"
             domain_name = f"{branch}.dev.pouringcat.com"
             environment = {"turnkey": "true", "turnkey_name": f"{branch}"}
-            app_name = f"{turnkey}App"
+            app_name = f"{branch}App"
             container = "amazon/amazon-ecs-sample"
         else:
             cluster_name = "devCluster"
