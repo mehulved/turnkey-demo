@@ -38,7 +38,7 @@ class TurnkeyStack(Stack):
                                                            cpu=256,  # Default is 256
                                                            runtime_platform=ecs.RuntimePlatform(
                                                                 operating_system_family=ecs.OperatingSystemFamily.LINUX,
-                                                                cpu_architecture=ecs.CpuArchitecture.X86_64
+                                                                cpu_architecture=ecs.CpuArchitecture.ARM64
                                                             ),
                                                            desired_count=2,  # Default is 1
                                                            task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
