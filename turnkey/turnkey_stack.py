@@ -28,7 +28,7 @@ class TurnkeyStack(Stack):
             app_name = "DevApp"
 
         repository = ecr.Repository.from_repository_name(self, "TurnkeyNginx", "turnkey-nginx")
-        container = ecs.ContainerImage.from_ecr_repository(repository, "default")
+        container = ecs.ContainerImage.from_ecr_repository(repository, "green")
 
         cluster = ecs.Cluster(self, cluster_name, vpc=vpc)
         domain_zone = route53.HostedZone.from_lookup(self, "pouringcat", domain_name="pouringcat.com")
