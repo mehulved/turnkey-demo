@@ -4,7 +4,7 @@ from aws_cdk import (
     aws_route53 as route53,
     aws_ecs_patterns as ecs_patterns,
     Stack,
-    # aws_sqs as sqs,
+    aws_ecr as ecr,
 )
 from constructs import Construct
 
@@ -27,7 +27,8 @@ class TurnkeyStack(Stack):
             environment = {"turnkey": "false"}
             app_name = "DevApp"
 
-        container = "716176091624.dkr.ecr.us-east-1.amazonaws.com/turnkey-nginx:default"
+        repository = ecr.Repository.from_repository_name(self, "TurnkeyNginx", "turnkey-nginx")
+        container = ecs.ContainerImage.from_ecr_repository(repository, "default")
 
         cluster = ecs.Cluster(self, cluster_name, vpc=vpc)
         domain_zone = route53.HostedZone.from_lookup(self, "pouringcat", domain_name="pouringcat.com")
@@ -41,7 +42,7 @@ class TurnkeyStack(Stack):
                                                             ),
                                                            desired_count=2,  # Default is 1
                                                            task_image_options=ecs_patterns.ApplicationLoadBalancedTaskImageOptions(
-                                                               image=ecs.ContainerImage.from_registry(container),
+                                                               image=container,
                                                                environment=environment),
                                                            memory_limit_mib=512,  # Default is 512
                                                            public_load_balancer=True,
