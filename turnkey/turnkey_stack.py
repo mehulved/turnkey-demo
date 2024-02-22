@@ -21,13 +21,13 @@ class TurnkeyStack(Stack):
             domain_name = f"{branch}.dev.pouringcat.com"
             environment = {"turnkey": "true", "turnkey_name": f"{branch}"}
             app_name = f"{branch}App"
-            container = "amazon/amazon-ecs-sample"
         else:
             cluster_name = "devCluster"
             domain_name = "dev.pouringcat.com"
             environment = {"turnkey": "false"}
             app_name = "DevApp"
-            container = "amazon/amazon-ecs-sample"
+
+        container = "716176091624.dkr.ecr.us-east-1.amazonaws.com/turnkey-nginx:default"
 
         cluster = ecs.Cluster(self, cluster_name, vpc=vpc)
         domain_zone = route53.HostedZone.from_lookup(self, "pouringcat", domain_name="pouringcat.com")
